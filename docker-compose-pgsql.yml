@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  glam-postgres:
+    image: postgres:15.3-alpine
+    container_name: glam-postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+  glam-pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: glam-pgadmin
+    restart: always
+    depends_on:
+      - glam-postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@localhost.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - 8080:80
+    volumes:
+      - ./data/pgadmin:/var/lib/pgadmin
+
+networks:
+  default:
+    name: local-network
+    external: true
